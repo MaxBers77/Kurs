@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>О программе</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div>
+    <label for="taskName">Имя задачи</label>
+    <h3 th:text="${userTask.taskName}" id="taskName"></h3>
+</div>
+
+<div>
+    <label for="discription">Описание задачи</label>
+    <textarea rows="5" cols="40" th:text="${userTask.description}" id="discription"></textarea>
+</div>
+
+<div>
+    <label for="aligners">Промежуточные этапы согласования задачи</label>
+    <p th:each="aligner : ${stageAligners}" th:text="${aligner.username}" id="aligners"></p>
+</div>
+
+<div>
+    <label for="targetUsers">Адресаты задачи</label>
+    <p th:each="targetUser : ${targetUsers}" th:text="${targetUser.username}" id="targetUsers"></p>
+</div>
+
+<div>
+    <label for="files">Прикрепленные файлы</label>
+    <div th:each="file : ${userTask.getFiles()}"   id="files">
+        <a th:href="'/user/file/'+${file.getId()}+'/'+${userTask.getId()+'/'+3}" th:text="${file.getName()}"></a>
+    </div>
+</div>
+
+<div>
+    <label for="signatures">Согласованно следующими пользователями</label>
+    <p th:each="user : ${userTask.getSignatures()}" th:text="${user.username}" id="signatures"></p>
+</div>
+
+<form th:action="@{/user/task_signing}" th:method="POST" th:object="${userTask}">
+    <div>
+        <h3 th:text="${interruptException}"></h3>
+        <label for="interruptedDescription">Если вы хотите прервать выполнение задачи, опишите причину</label>
+        <textarea th:field="*{interruptDescription}" id="interruptedDescription"></textarea>
+    </div>
+    <div>
+        <button type="submit" name="interrupt" value="interrupt">Прервать</button>
+    </div>
+    <div>
+        <label for="signingDescription">Добавте Ваш комментарий к описанию задачи перед согласованием</label>
+        <textarea th:field="*{signingDescription}" id="signingDescription"></textarea>
+    </div>
+    <div>
+        <button type="submit" name="signing" value="signing">Согласовать</button>
+    </div>
+    <div>
+        <button type="submit" name="exit" value="exit">Выйти</button>
+    </div>
+
+</form>
+
+
+</body>

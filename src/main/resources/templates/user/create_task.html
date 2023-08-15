@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>О программе</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5">
+    <form th:action="@{/user/create_task}" enctype="multipart/form-data" th:method="POST" th:object="${userTask}">
+        <div>
+            <h3 th:text="${nameError}"></h3>
+            <label for="taskName">Имя задачи</label>
+            <input type="text" th:field="*{taskName}" id="taskName">
+            <span th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></span>
+        </div>
+        <div>
+            <label for="route">Выберите маршрут</label>
+            <select th:field="*{routeID}" id="route">
+                <option th:each="route : ${routes}" th:text="${route.getName()}" th:value="${route.getId()}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="description">Введите описание задачи</label>
+            <textarea th:field="*{description}" id="description"></textarea>
+        </div>
+
+        <div>
+            <label for="files">Прикрепленные файлы</label>
+            <div th:each="file : ${userTask.getFiles()}"   id="files">
+                <a th:href="'/user/file/'+${file.getId()}+'/'+${userTask.getId()+'/'+1}" th:text="${file.getName()}"></a>
+            </div>
+        </div>
+
+        <div>
+            <label for="file">Прикрепить файл</label>
+            <input type="file" name="file" id="file">
+        </div>
+
+        <div>
+            <button type="submit" name="addfile" value="addfile">Добавить файл</button>
+        </div>
+
+        <button type="submit">Создать задачу</button>
+        <br>
+        <button type="submit" name="exit" value="exit">Выйти</button>
+
+    </form>
+
+
+</div>
+
+</body>
+</html>
